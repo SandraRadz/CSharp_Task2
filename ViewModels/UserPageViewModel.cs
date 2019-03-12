@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using CSharp_Task2_3.Models;
 using CSharp_Task2_3.Properties;
@@ -9,7 +10,7 @@ using CSharp_Task2_3.Tools;
 
 namespace CSharp_Task2_3.ViewModels
 {
-    class UserPageViewModel :  BaseViewModel
+    class UserPageViewModel : INotifyPropertyChanged
 
     {
         private string _name;
@@ -73,57 +74,7 @@ namespace CSharp_Task2_3.ViewModels
             }
         }
 
-        public string IsAdult
-        {
-            get
-            {
-                return ("Is you adult? "+_isAdult);
-            }
-            set
-            {
-                _isAdult = Convert.ToBoolean(value);
-                OnPropertyChanged();
-            }
-        }
-
-        public string SunSign
-        {
-            get
-            {
-                return _sunSign;
-            }
-            set
-            {
-                _sunSign = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public string ChineseSign
-        {
-            get
-            {
-                return _chineseSign;
-            }
-            set
-            {
-                _chineseSign = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public string IsBirthday
-        {
-            get
-            {
-                return ("Is today your birthday?"+ _isBirthday);
-            }
-            set
-            {
-                _isBirthday = Convert.ToBoolean(value);
-                OnPropertyChanged();
-            }
-        }
+      
 
         public RelayCommand<object> GoCommand
         {
@@ -133,10 +84,16 @@ namespace CSharp_Task2_3.ViewModels
                             obj =>
                            {
                                Person person = new Person(_name, _lastName, _email, _birth);
-                               _isAdult = person.IsAdult;
-                               _sunSign = person.SunSign;
-                               _chineseSign = person.ChineseSign;
-                               _isBirthday = person.IsBirthday;
+                               MessageBox.Show(
+                                   $"First name: {person.Name}\n" +
+                                   $"Last name: {person.LastName}\n" +
+                                   $"Email: {person.Email}\n" +
+                                   $"Date of birth: {person.Birth}\n" +
+                                   $"Adult: {person.IsAdult}\n" +
+                                   $"Our Sign: {person.SunSign}\n" +
+                                   $"Chinese Sign: {person.ChineseSign}\n" +
+                                   $"{person}"
+                               );
 
                            }, o => CanExecuteCommand()));
             }
@@ -149,5 +106,11 @@ namespace CSharp_Task2_3.ViewModels
             return !string.IsNullOrWhiteSpace(_name) && !string.IsNullOrWhiteSpace(_lastName) && !string.IsNullOrWhiteSpace(_email) ;
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }
