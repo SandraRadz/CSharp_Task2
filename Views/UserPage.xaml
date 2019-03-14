@@ -36,7 +36,7 @@
         <TextBox FontSize="18" Grid.Column="2" Grid.Row="4"  Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="{Binding Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="39,5" />
         <Label Content="Choose date of your birthday"  FontSize="18" Grid.Column="4" Grid.Row="3"  Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="49,5,48,5" />
         <DatePicker FontSize="18" Grid.Column="4" Grid.Row="4"  Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectedDate="{Binding Birth}" Margin="49,5,48,5"/>
-        <Button FontSize="18" Content="GO" Grid.Column="5" Grid.Row="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Command="{Binding GoCommand}" Margin="35,10,48,0"/>
+        <Button FontSize="18" Content="Proceed" Grid.Column="5" Grid.Row="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Command="{Binding GoCommand}" Margin="35,10,48,0"/>
 
     </Grid>
 </UserControl>

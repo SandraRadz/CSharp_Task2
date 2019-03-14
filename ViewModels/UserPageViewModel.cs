@@ -1,11 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Input;
 using CSharp_Task2_3.Models;
-using CSharp_Task2_3.Properties;
 using CSharp_Task2_3.Tools;
 
 namespace CSharp_Task2_3.ViewModels
@@ -17,10 +16,6 @@ namespace CSharp_Task2_3.ViewModels
         private string _lastName;
         private string _email;
         private DateTime _birth;
-        private bool _isAdult;
-        private string _sunSign;
-        private string _chineseSign;
-        private bool _isBirthday;
 
         private RelayCommand<object> _goCommand;
 
@@ -81,29 +76,32 @@ namespace CSharp_Task2_3.ViewModels
             get
             {
                 return _goCommand ?? (_goCommand = new RelayCommand<object>(
-                            obj =>
-                           {
-                               Person person = new Person(_name, _lastName, _email, _birth);
-                               MessageBox.Show(
-                                   $"First name: {person.Name}\n" +
-                                   $"Last name: {person.LastName}\n" +
-                                   $"Email: {person.Email}\n" +
-                                   $"Date of birth: {person.Birth}\n" +
-                                   $"Adult: {person.IsAdult}\n" +
-                                   $"Our Sign: {person.SunSign}\n" +
-                                   $"Chinese Sign: {person.ChineseSign}\n" +
-                                   $"{person}"
-                               );
-
-                           }, o => CanExecuteCommand()));
+                           CreateUser, o => CanExecuteCommand()));
             }
         }
 
+        private async void CreateUser(object o)
+        {
+
+            await Task.Run((() =>
+            {
+                Person person = new Person(_name, _lastName, _email, _birth);
+                MessageBox.Show(
+                    $"First name: {person.Name}\n" +
+                    $"Last name: {person.LastName}\n" +
+                    $"Email: {person.Email}\n" +
+                    $"Date of birth: {person.Birth}\n" +
+                    $"Is user adult?: {person.GetIsAdult}\n" +
+                    $"Sun Sign: {person.GetSunSign}\n" +
+                    $"Chinese Sign: {person.GetChineseSign}\n"+
+                    $"Is birthday today?: {person.GetIsBirthday}\n" 
+                );
+            }));
+        }
 
         public bool CanExecuteCommand()
         {
-            //TO DO check if data is null
-            return !string.IsNullOrWhiteSpace(_name) && !string.IsNullOrWhiteSpace(_lastName) && !string.IsNullOrWhiteSpace(_email) ;
+            return !string.IsNullOrWhiteSpace(_name) && !string.IsNullOrWhiteSpace(_lastName) && !string.IsNullOrWhiteSpace(_email) && !(_birth==default(DateTime));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

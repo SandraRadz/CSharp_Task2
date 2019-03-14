@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 namespace CSharp_Task2_3.Models
 {
@@ -8,21 +9,27 @@ namespace CSharp_Task2_3.Models
         private string _lastName;
         private string _email;
         private DateTime _birth;
-        private readonly bool _isAdult;
-        private readonly string _sunSign;
-        private readonly string _chineseSign;
-        private readonly bool _isBirthday;
+        private readonly bool IsAdult;
+        private readonly string SunSign;
+        private readonly string ChineseSign;
+        private readonly bool IsBirthday;
 
         public Person(string name, string lastName, string email, DateTime birth)
         {
+            validateName(name);
+            validateName(lastName);
+            validateDate(birth);
+            validateEmail(email);
+
             _name = name;
             _lastName = lastName;
             _email = email;
             _birth = birth;
-            _isAdult = CalcIsAdult();
-            _sunSign = CalcSunSign();
-            _chineseSign = CalcChineseSign();
-            _isBirthday = CalcIsBirthday();
+            IsAdult = CalcIsAdult();
+            SunSign = CalcSunSign();
+            ChineseSign = CalcChineseSign();
+            IsBirthday = CalcIsBirthday();
+
         }
 
         public Person(string name, string lastName,  DateTime birth): this(name, lastName, "none", birth)
@@ -79,35 +86,35 @@ namespace CSharp_Task2_3.Models
             }
         }
 
-        public bool IsAdult
+        public bool GetIsAdult
         {
             get
             {
-                return _isAdult;
+                return IsAdult;
             }
         }
 
-        public string SunSign
+        public string GetSunSign
         {
             get
             {
-                return _sunSign;
+                return SunSign;
             }
         }
 
-        public string ChineseSign
+        public string GetChineseSign
         {
             get
             {
-                return _chineseSign;
+                return ChineseSign;
             }
         }
 
-        public bool IsBirthday
+        public bool GetIsBirthday
         {
             get
             {
-                return _isBirthday;
+                return IsBirthday;
             }
         }
 
@@ -128,14 +135,84 @@ namespace CSharp_Task2_3.Models
 
         public string CalcSunSign()
         {
-            //TO DO 
-            return "leo";
+            int moth = Birth.Month;
+            int day = Birth.Day;
+            switch (moth)
+            {
+                case 1:
+                    if (day <= 19)
+                        return "Capricorn";
+                    else
+                        return "Aquarius";
+
+                case 2:
+                    if (day <= 18)
+                        return "Aquarius";
+                    else
+                        return "Pisces";
+                case 3:
+                    if (day <= 20)
+                        return "Pisces";
+                    else
+                        return "Aries";
+                case 4:
+                    if (day <= 19)
+                        return "Aries";
+                    else
+                        return "Taurus";
+                case 5:
+                    if (day <= 20)
+                        return "Taurus";
+                    else
+                        return "Gemini";
+                case 6:
+                    if (day <= 20)
+                        return "Gemini";
+                    else
+                        return "Cancer";
+                case 7:
+                    if (day <= 22)
+                        return "Cancer";
+                    else
+                        return "Leo";
+                case 8:
+                    if (day <= 22)
+                        return "Leo";
+                    else
+                        return "Virgo";
+                case 9:
+                    if (day <= 22)
+                        return "Virgo";
+                    else
+                        return "Libra";
+                case 10:
+                    if (day <= 22)
+                        return "Libra";
+                    else
+                        return "Scorpio";
+                case 11:
+                    if (day <= 21)
+                        return "Scorpio";
+                    else
+                        return "Sagittarius";
+                case 12:
+                    if (day <= 21)
+                        return "Sagittarius";
+                    else
+                        return "Capricorn";
+            }
+            return "";
         }
 
         public string CalcChineseSign()
         {
-            //TO DO 
-            return "horse";
+            System.Globalization.EastAsianLunisolarCalendar cc = new System.Globalization.ChineseLunisolarCalendar();
+            int sexagenaryYear = cc.GetSexagenaryYear(Birth);
+            int terrestrialBranch = cc.GetTerrestrialBranch(sexagenaryYear);
+
+            string[] years = new string[] { "Rat", "Ox", "Tiger", "Rabbit", "Dragon", "Snake", "Horse", "Goat", "Monkey", "Rooster", "Dog", "Pig" };
+
+            return years[terrestrialBranch - 1];
         }
 
         public bool CalcIsBirthday()
@@ -143,6 +220,28 @@ namespace CSharp_Task2_3.Models
             if (DateTime.Today.Month == _birth.Month && DateTime.Today.Day == _birth.Day)
                 return true;
             return false;
+        }
+
+        private void validateName(string name)
+        {
+            if (name.Length < 2)
+                throw new NameError("Please, print you real name. This one is too short "+ name);
+        }
+
+        private void validateDate(DateTime date)
+        {
+            if (date > DateTime.Today)
+                throw new FutureDayError(date);
+            if (DateTime.Today.Year - date.Year >= 135)
+                throw new FutureDayError(date);
+        }
+
+        private void validateEmail(string email)
+        {
+            Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+            Match match = regex.Match(email);
+            if (!match.Success)
+                throw new EmailError("Incorrect email "+email);
         }
     }
 }
