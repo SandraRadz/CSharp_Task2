@@ -21,7 +21,7 @@ namespace CSharp_Task2_3.Models
         {
             get
             {
-                return _message;
+                return _message+ ". Email must be like aaa@aaa.aaa";
             }
         }
     }

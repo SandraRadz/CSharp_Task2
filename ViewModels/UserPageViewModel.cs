@@ -85,19 +85,41 @@ namespace CSharp_Task2_3.ViewModels
 
             await Task.Run((() =>
             {
-                Person person = new Person(_name, _lastName, _email, _birth);
-                MessageBox.Show(
-                    $"First name: {person.Name}\n" +
-                    $"Last name: {person.LastName}\n" +
-                    $"Email: {person.Email}\n" +
-                    $"Date of birth: {person.Birth}\n" +
-                    $"Is user adult?: {person.GetIsAdult}\n" +
-                    $"Sun Sign: {person.GetSunSign}\n" +
-                    $"Chinese Sign: {person.GetChineseSign}\n"+
-                    $"Is birthday today?: {person.GetIsBirthday}\n" 
-                );
+                try
+                {
+                    Person person = new Person(_name, _lastName, _email, _birth);
+                    MessageBox.Show(
+                        $"First name: {person.Name}\n" +
+                        $"Last name: {person.LastName}\n" +
+                        $"Email: {person.Email}\n" +
+                        $"Date of birth: {person.Birth}\n" +
+                        $"Is user adult?: {person.GetIsAdult}\n" +
+                        $"Sun Sign: {person.GetSunSign}\n" +
+                        $"Chinese Sign: {person.GetChineseSign}\n" +
+                        $"Is birthday today?: {person.GetIsBirthday}\n"
+                    );
+                }
+                catch (EmailError e)
+                {
+                    MessageBox.Show(e.Message);
+                }
+                catch (FutureDayError e)
+                {
+                    MessageBox.Show(e.Message);
+                }
+                catch (WrongBirthError e)
+                {
+                    MessageBox.Show(e.Message);
+                }
+                catch (NameError e)
+                {
+                    MessageBox.Show(e.Message);
+                }
+
+
             }));
-        }
+                }
+           
 
         public bool CanExecuteCommand()
         {
